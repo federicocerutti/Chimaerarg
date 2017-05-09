@@ -1,0 +1,42 @@
+chmod +x ChimaerArg.sh
+
+cd sources/cegartix-v0_4
+
+echo "BUILDING CEGARTIX"
+
+chmod +x build
+./build
+
+cp cegartix ../..
+
+cd ..
+
+echo "BUILDING GRIS"
+
+cd gris
+
+make
+
+cp gris ../../
+
+cd ..
+
+echo "BUILDING ArgTools"
+
+cd argtools
+
+g++ FindStableExtensions.cpp -o nofal
+
+cp nofal ../../
+
+cd ..
+
+echo "BUILDING LABSATSOLVER"
+
+cd LabSATSolver/
+
+chmod +x build
+./build
+
+cp solver.jar ../..
+cp libLingeling.so ../..

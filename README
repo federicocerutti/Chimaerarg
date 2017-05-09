@@ -1,0 +1,87 @@
+ChimaerArg.sh is the main file to run for executing the portfolio. It supports the Probo interface, and requires the apx format for AFs.
+
+The portfolio is written in python and shell scripts, so it will not have any specific compile issue. 
+
+Source files of included solvers are provided in the "source" directory. In that directory, readme files and the agreement from solvers' developers can be found.
+
+A "build" script is provided, that will compile all the included solvers. In the following, the specific requirements (if any) of included solvers. 
+
+****************
+   CEGARTIX
+****************
+Depending on your system, you might need to install the following required libraries
+
+=====
+tbb-devel (tbb-dev)
+=====
+
+This library is required by clasp's library interface. 
+Some repositories include this library. If not consider from clasp's README how to obtain the required library (+version):
+  
+  clasp's multithread support requires the Intel Threading Building Blocks library (version >= 3.x) 
+  which is freely available at: http://threadingbuildingblocks.org/ 
+  After downloading and installing you may want to set and export the 
+  TBB30_INSTALL_DIR environment variable.
+======================================================
+
+If all libraries are installed, it should suffice to call 'build'. It consists of the following steps:
+1) Building the clasp (v 2.0.5) library.
+--) manual build: go to clasp-library and follow instructions in README
+Note: due to some new compilers failing to build clasp, in app/clasp_app.cpp a minor change was introduced to work around this problem
+2) Building cegartix
+--) manual build (if libclasp.a is present in same directory as Makefile): call make in main directory
+
+This package contains all required boost contents and the clasp library for building. 
+
+
+TROUBLESHOOTING
+When testing on different systems, most errors occurs with missing libraries: clasp uses the tbb-devel library, which is not always installed.
+
+Some errors that might occur:
+-) when building clasp/cegartix
+An error message like: Compilation terminated
+Potentially, the tbb-devel library is missing
+-) Make error (mentioning seperators) that still occurs when calling 'make (dist)clean'
+remove all .d files in cegartix subdirectories (usually suffices for core/ argu/)
+This is a bug in the Makefile script, when some specific errors occur during building, which cannot be repaired with 'make clean'
+
+****************
+      GRIS
+**************** 
+
+
+This solver requires common C++ libraries: libstdc++ and libgcc
+
+
+****************
+    ArgTools
+**************** 
+
+No specific requirements
+
+
+****************
+    LabSATSolver
+**************** 
+
+At least java 7, maven, gcc and make are required. The environment variable $JAVA_HOME has to be set accordingly.
+
+Please, be aware that the build script will try to download some components, in case they are missing.
+
+
+********************************
+   POSSIBLE ISSUES WITH JAVA
+********************************
+
+LabSATSolver has been developed in Java, and may face issues with regards to the memory allocated by the JVM. We observed that different versions of JAVA, as well as different HW and SW architecture, can prevent the solver from running. Under some circumstances the following error is raised:
+
+"Error occurred during initialization of VM Could not reserve enough space for code cache"
+
+For fixing it, it is necessary to increase the amount of RAM made available to the solver. This can be done by changing lines 3 and 4 of the ex_lab.sh file. They have been currently set to:
+
+ulimit -m 3850000
+ulimit -v 3850000
+
+This can be increased to 3950000 or even 4000000, assuming that slightly more than 4GB of RAM are made available for Java solvers.
+
+
